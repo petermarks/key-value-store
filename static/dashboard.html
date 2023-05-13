@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Key-Value Store Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body {
+      background-color: #333333;
+    }
+  
+    .container {
+      margin-top: 50px;
+    }
+  
+    .card {
+      background-color: #424242;
+      color: #ffffff;
+    }
+  
+    table {
+      color: #ffffff;
+    }
+  
+    th {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">Key-Value Store Dashboard</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody id="data-table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:5000/dump');
+        const data = await response.json();
+
+        const tableBody = document.getElementById('data-table');
+        tableBody.innerHTML = '';
+
+        // Sort the keys alphabetically
+        const keys = Object.keys(data).sort();
+
+        // Iterate over the sorted keys and create rows in the table
+        keys.forEach(key => {
+          const value = data[key];
+          const row = document.createElement('tr');
+          const keyCell = document.createElement('td');
+          const valueCell = document.createElement('td');
+          keyCell.textContent = key;
+          valueCell.textContent = value;
+          row.appendChild(keyCell);
+          row.appendChild(valueCell);
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData(); // Initial fetch on page load
+
+    // Fetch data every 10 seconds
+    setInterval(fetchData, 10000);
+  </script>
+</body>
+</html>
