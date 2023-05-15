@@ -50,7 +50,7 @@
   <script>
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:5000/dump');
+        const response = await fetch('/dump');
         const data = await response.json();
 
         const tableBody = document.getElementById('data-table');
